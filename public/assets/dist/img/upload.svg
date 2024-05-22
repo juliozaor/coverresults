@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="149.39" height="116.389" viewBox="0 0 149.39 116.389">
+  <defs>
+    <clipPath id="clip-path">
+      <circle id="Elipse_150" data-name="Elipse 150" cx="58.195" cy="58.195" r="58.195" transform="translate(0 0)" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ef840c"/>
+      <stop offset="1" stop-color="#f0b605"/>
+    </linearGradient>
+    <filter id="Elipse_148" x="83.39" y="28.612" width="66" height="66" filterUnits="userSpaceOnUse">
+      <feOffset dy="3" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Grupo_22979" data-name="Grupo 22979" transform="translate(-552.806 -260.412)">
+    <g id="Enmascarar_grupo_11" data-name="Enmascarar grupo 11" transform="translate(552.806 260.412)" clip-path="url(#clip-path)">
+      <g id="Grupo_13657" data-name="Grupo 13657" transform="translate(-4.212 -1.484)">
+        <rect id="Rectángulo_2815" data-name="Rectángulo 2815" width="123.952" height="123.952" fill="#dbdbdb"/>
+        <path id="Trazado_11445" data-name="Trazado 11445" d="M3174.643,1759.772c-1.047-2.116-8.608-7.57-12.7-8.81a82.258,82.258,0,0,1-10.979-4.05l.049-.041-.493-.74c.159-.152.193-.25.075-.28-1.205-.3-3.176-11.43-3.176-11.43a1.459,1.459,0,0,0-.017.207v-.207c-1.983-.463-3.846-.871-5.76-1.222a63.023,63.023,0,0,1-.926-9.869c1.975-2.32,3.739-4.787,4.347-6.743a74.6,74.6,0,0,0,1.956-7.332,3.025,3.025,0,0,0,2.175-1.078c.871-1.078,1.088-7.979,1.741-9.92s1.088-5.175-1.089-4.96a2.3,2.3,0,0,0-1.114.441c.217-1.433,2.612-5.06,2.612-5.06s2.011-12.185,1.609-13,2.011-1.828-1.609-8.53-19.713-16.45-26.351-17.262-15.891,0-19.712,10.56c0,0-10.057,2.234-11.466,12.795s6.437,18.075,6.437,21.324c0,.014,0,.026,0,.04-.427-1.124-.9-2.026-1.344-2.173-1.306-.431-3.7-.431-3.265,4.744s.964,1.168,2.83,10.782c1.088,5.607,3.048,1.294,3.048,1.294s1.824,8.927,6.183,15.323c.013,2.23.051,5.763.15,8.6q-2.782.528-5.569,1.239v.237a.9.9,0,0,0-.027-.133s-1.9,11.15-3.114,11.464c-.168.043-.031.219.341.49l-1.4,1.063a11.421,11.421,0,0,1-2.02,1.224l-3.708,1.75-3.039.787a15.533,15.533,0,0,0-6.866,3.834l-6.234,5.987h98.993S3175.243,1760.986,3174.643,1759.772Z" transform="translate(-3063.736 -1637.175)" fill="#babab9"/>
+      </g>
+    </g>
+    <g id="Grupo_22969" data-name="Grupo 22969" transform="translate(414.195 -2.975)">
+      <g id="Grupo_13900" data-name="Grupo 13900">
+        <g id="Grupo_13658" data-name="Grupo 13658" transform="translate(0 82)">
+          <g transform="matrix(1, 0, 0, 1, 138.61, 181.39)" filter="url(#Elipse_148)">
+            <g id="Elipse_148-2" data-name="Elipse 148" transform="translate(92.39 34.61)" stroke="#fff" stroke-width="2" fill="url(#linear-gradient)">
+              <circle cx="24" cy="24" r="24" stroke="none"/>
+              <circle cx="24" cy="24" r="23" fill="none"/>
+            </g>
+          </g>
+        </g>
+        <g id="Grupo_13659" data-name="Grupo 13659" transform="translate(-0.5 82.582)">
+          <line id="Línea_8" data-name="Línea 8" y1="19" transform="translate(255.5 229.5)" fill="none" stroke="#fff" stroke-width="2"/>
+          <line id="Línea_9" data-name="Línea 9" y1="19" transform="translate(265 239) rotate(90)" fill="none" stroke="#fff" stroke-width="2"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

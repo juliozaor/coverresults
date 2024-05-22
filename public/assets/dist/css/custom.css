@@ -1,0 +1,311 @@
+.bd-placeholder-img {
+	font-size: 1.125rem;
+	text-anchor: middle;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+
+@media (min-width: 768px) {
+	.bd-placeholder-img-lg {
+		font-size: 3.5rem;
+	}
+}
+
+.b-example-divider {
+	width: 100%;
+	height: 3rem;
+	background-color: rgba(0, 0, 0, .1);
+	border: solid rgba(0, 0, 0, .15);
+	border-width: 1px 0;
+	box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+}
+
+.b-example-vr {
+	flex-shrink: 0;
+	width: 1.5rem;
+	height: 100vh;
+}
+
+.bi {
+	vertical-align: -.125em;
+	fill: currentColor;
+}
+
+.nav-scroller {
+	position: relative;
+	z-index: 2;
+	height: 2.75rem;
+	overflow-y: hidden;
+}
+
+.nav-scroller .nav {
+	display: flex;
+	flex-wrap: nowrap;
+	padding-bottom: 1rem;
+	margin-top: -1px;
+	overflow-x: auto;
+	text-align: center;
+	white-space: nowrap;
+	-webkit-overflow-scrolling: touch;
+}
+
+.btn-bd-primary {
+	--bd-violet-bg: #712cf9;
+	--bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+	--bs-btn-font-weight: 600;
+	--bs-btn-color: var(--bs-white);
+	--bs-btn-bg: var(--bd-violet-bg);
+	--bs-btn-border-color: var(--bd-violet-bg);
+	--bs-btn-hover-color: var(--bs-white);
+	--bs-btn-hover-bg: #6528e0;
+	--bs-btn-hover-border-color: #6528e0;
+	--bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+	--bs-btn-active-color: var(--bs-btn-hover-color);
+	--bs-btn-active-bg: #5a23c8;
+	--bs-btn-active-border-color: #5a23c8;
+}
+
+.bd-mode-toggle {
+	z-index: 1500;
+}
+
+.bd-mode-toggle .dropdown-menu .active .bi {
+	display: block !important;
+}
+
+.banner-map {
+	background-image: url("../img/background-1.jpg");
+	background-position: center;
+	background-attachment: fixed;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.backpage {
+	background-image: url("../img/backpage.png");
+	background-position: bottom;
+	background-attachment: scroll;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+.backpage2 {
+	background-image: url("../img/backpage2.png");
+	background-position: bottom;
+	background-attachment: scroll;
+	background-size: 100%;
+	background-repeat: no-repeat;
+}
+
+.funtion-item-card {
+	border-radius: 30px;
+	background-color: #fff;
+	box-shadow: 0px 3px 20px #0044FF29;
+	padding: 20px;
+	font-size: 1em;
+	text-align: center;
+}
+
+.equal {
+	display: flex;
+	display: -webkit-flex;
+	flex-wrap: wrap;
+}
+
+.table-container {
+	border-radius: 30px;
+	background-color: #fff;
+	box-shadow: 0px 3px 20px #0044FF29;
+	padding: 20px;
+}
+
+.table-container h4 {
+	font-size: 1em;
+}
+
+
+.table-container .table-striped>tbody>tr:nth-child(2n+1)>td,
+.table-striped>tbody>tr:nth-child(2n+1)>th {
+	/* Permalink - use to edit and share this gradient. Enlace permanente - úsalo para editar y compartir este gradiente: https://colorzilla.com/gradient-editor/#fffcfc+0,f5f7f9+100 */
+	background: linear-gradient(to bottom, #FFFFFF 50%, #F5F5F5 100%);
+	/* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+
+}
+
+.img-contact {
+	border-radius: 0 50px 0 0;
+}
+
+.spacer100 {
+	height: 100px;
+}
+
+
+.banner-map2 {
+	background-image: url("../img/background-2.jpg");
+	background-position: center;
+	background-attachment: fixed;
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: "Montserrat", sans-serif;
+	font-weight: 700;
+	font-style: normal;
+}
+
+p,
+a,
+td {
+	font-family: "Montserrat", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+}
+
+label {
+
+	font-family: "Montserrat", sans-serif;
+	font-weight: 600;
+	font-style: normal;
+	font-size: 0.8em;
+}
+
+td {
+	font-family: "Montserrat", sans-serif;
+	font-weight: 400;
+	font-style: normal;
+	font-size: 14px;
+}
+
+.btn,
+.active {
+	font-family: "Montserrat", sans-serif;
+	font-weight: 600;
+}
+
+strong {
+	font-family: "Montserrat", sans-serif;
+	font-optical-sizing: auto;
+	font-weight: 700;
+	font-style: normal;
+}
+
+.username.dropdown-toggle::after {
+	border: none;
+	content: url("../img/arrow.svg");
+	vertical-align: 0;
+}
+
+.container-rounded {
+	border-radius: 30px;
+	background-color: #fff;
+	box-shadow: 0px 3px 20px #0044FF29;
+	padding: 16px;
+}
+
+.aside-search {
+	width: 350px;
+	position: absolute;
+	z-index: 1200;
+	margin-top: 20px;
+	margin-left: 20px;
+}
+
+.aside-search2 {
+	width: 350px;
+	position: absolute;
+	z-index: 1200;
+	top: 160px;
+	right: 20px;
+}
+
+.marker {
+	position: absolute;
+	margin: 0 auto;
+	z-index: 1201;
+	top: 50%;
+	left: 50%;
+}
+
+
+@media (max-width: 700px) {
+
+	.aside-search {
+		width: 100%;
+		position: relative;
+		margin-top: 0px;
+		margin-left: 0px;
+	}
+
+	.container-rounded {
+		border-radius: 30px;
+		background-color: #fff;
+		box-shadow: 0px 0px 0px #0044FF29;
+		padding: 0px;
+	}
+
+	.id-search {
+		position: absolute !important;
+		top: 16px;
+		right: 16px;
+		background: #fff;
+	}
+}
+
+.table-border-right {
+	border-right: 1pt solid #BFBFBF !important;
+}
+
+.table-border-left {
+	border-left: 1pt solid #BFBFBF !important;
+}
+
+.modal-content {
+	border-radius: 30px;
+}
+
+.custom-file-input {
+	display: none;
+}
+
+.custom-file-label {
+	display: block;
+	margin-top: 10px;
+	text-align: center;
+}
+
+.file-upload-wrapper {
+	text-align: center;
+}
+
+.file-upload-image {
+	cursor: pointer;
+	max-width: 100%;
+	height: auto;
+}
+
+.clear-button {
+	display: none;
+	margin-top: 10px;
+	cursor: pointer;
+	color: red;
+}
+
+
+/* change transition duration to control the speed of fade effect */
+.carousel-item {
+	transition: transform 0s;
+}
+
+.carousel-fade .active.carousel-item-start,
+.carousel-fade .active.carousel-item-end {
+	transition: opacity 0s 0.1ms;
+}
