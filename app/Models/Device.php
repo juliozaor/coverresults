@@ -23,10 +23,7 @@ class Device extends Model
     {
         return $this->hasOne(Suspect::class, 'device_id');
     }
-   /*  public function suspect()
-    {
-        return $this->belongsTo(Suspect::class);
-    } */
+    
 
     public function gpsPositions()
     {

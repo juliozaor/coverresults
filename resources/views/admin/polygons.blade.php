@@ -276,7 +276,13 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Polygon saved successfully');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Polygon saved successfully',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
                 // Clear the form or close the modal
                 polygonForm.reset();
                 coordinatesContainer.innerHTML = `
@@ -293,12 +299,26 @@
                 document.body.style = '';
                 window.location.reload();
             } else {
-                alert('Error saving polygon');
+                Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error saving polygon',
+                timer: 3000,
+                showConfirmButton: false
+            });
+
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error saving polygon');
+            Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error saving polygon',
+            timer: 3000,
+            showConfirmButton: false
+        });
+
         });
     });
 });
@@ -337,7 +357,14 @@
             }
         } catch (error) {
             console.error('Error parsing polygon coordinates:', error);
-            alert('Error loading polygon coordinates');
+            Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error loading polygon coordinates',
+            timer: 3000,
+            showConfirmButton: false
+        });
+
         }
     });
 
@@ -391,20 +418,42 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Polygon updated successfully');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Polygon updated successfully',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+                            
                 editPolygonBootstrapModal.hide(); // Oculta el modal
                 // Limpia los overlays y la clase oscura
                 document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
                 document.body.classList.remove('modal-open');
                 document.body.style = '';
                 window.location.reload();
+                
             } else {
-                alert('Error updating polygon');
+                Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error updating polygon',
+                timer: 3000,
+                showConfirmButton: false
+            });
+
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error updating polygon');
+            Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error updating polygon',
+            timer: 3000,
+            showConfirmButton: false
+        });
+
         });
     });
 });

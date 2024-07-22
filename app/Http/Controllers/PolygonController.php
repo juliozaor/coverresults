@@ -22,7 +22,7 @@ class PolygonController extends Controller
                 ->orWhere('coordinates', 'LIKE', "%{$search}%");
         }
 
-        $polygons = $query->paginate(10); // Cambia '10' al número de elementos por página que desees.
+        $polygons = $query->paginate(10); 
         $totalPolygons = $query->count();
         return view('admin.polygons', compact('polygons', 'totalPolygons', 'search'));
 

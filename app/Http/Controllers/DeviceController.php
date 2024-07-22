@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Alert;
 use Illuminate\Http\Request;
 use App\Models\Device;
+use App\Models\LocationLog;
 use App\Models\Polygon;
 use App\Models\Suspect;
 use Illuminate\Support\Facades\Validator;
@@ -64,7 +65,7 @@ class DeviceController extends Controller
         return redirect()->route('devices.index')->with('success', 'Device deleted successfully.');
     }
 
-   /* public function updateLocation($id, Request $request)*/
+ 
    public function updateLocation($serial, Request $request)
     {
 
@@ -74,12 +75,32 @@ class DeviceController extends Controller
             'battery_level' => 'required|numeric'
         ]);
 
-        /* $device = Device::findOrFail($id); */
+       
         $device = Device::where('serial', $serial)->firstOrFail();
         $device->latitude = $request->latitude;
         $device->longitude = $request->longitude;
         $device->battery_level = $request->battery_level;
         $device->save();
+
+
+
+        $suspect = $device->suspect;
+        if ($suspect) {
+            $currentDate = now()->format('Y-m-d');
+            $latitude = $request->latitude;
+            $longitude = $request->longitude;
+    
+            $locationLog = LocationLog::firstOrCreate(
+                ['device_id' => $device->id, 'date' => $currentDate],
+                ['suspect_id' => $suspect->id, 'locations' => []]
+            );
+    
+            $locations = $locationLog->locations;
+            $locations[] = ['latitude' => $latitude, 'longitude' => $longitude];
+            $locationLog->locations = $locations;
+            $locationLog->save();
+        }
+    
 
         
 
@@ -124,58 +145,6 @@ class DeviceController extends Controller
 
         return response()->json(['message' => 'Location updated successfully'], 200);
 
-     /*    $request->validate([
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'battery_level' => 'required|numeric'
-        ]);
-
-        $device = Device::where('serial', $serial)->firstOrFail();
-        $device->latitude = $request->latitude;
-        $device->longitude = $request->longitude;
-        $device->battery_level = $request->battery_level;
-        $device->save();
-
-        $polygon = $device->polygon;
-        $alert = Alert::firstOrCreate(['device_id' => $device->id]);
-
-        // Estado anterior de las alertas
-        $wasOutOfLocation = $alert->currently_out_of_location;
-        $wasBatteryEmpty = $alert->currently_battery_empty;
-
-        // Verificar si el dispositivo está fuera del polígono
-        if ($polygon && !$this->isInsidePolygon($device, $polygon)) {
-            if (!$wasOutOfLocation) {
-                // Incrementa solo si estaba dentro y ahora está fuera
-                $alert->out_of_location_count++;
-                $alert->currently_out_of_location = true;
-            }
-        } else {
-            if ($wasOutOfLocation) {
-                // Decrementa solo si estaba fuera y ahora está dentro
-                $alert->out_of_location_count--;
-                $alert->currently_out_of_location = false;
-            }
-        }
-
-        // Verificar el nivel de batería
-        if ($device->battery_level < 20) {
-            if (!$wasBatteryEmpty) {
-                // Incrementa solo si la batería estaba bien y ahora está baja
-                $alert->battery_empty_count++;
-                $alert->currently_battery_empty = true;
-            }
-        } else {
-            if ($wasBatteryEmpty) {
-                // Decrementa solo si la batería estaba baja y ahora está bien
-                $alert->battery_empty_count--;
-                $alert->currently_battery_empty = false;
-            }
-        }
-
-        $alert->save();
-
-        return response()->json(['message' => 'Location updated successfully'], 200); */
     }
 
     private function isInsidePolygon($device, $polygon)
@@ -229,46 +198,9 @@ return response()->json($devices);
     }
 
 
-
-   /*  public function registerDevice(Request $request)
-    {
-        $request->validate([
-            'token' => 'required|string',
-        ]);
-
-        $device = Device::updateOrCreate(
-            ['user_id' => auth()->id()],
-            ['fcm_token' => $request->token]
-        );
-
-        return response()->json(['message' => 'Device registered successfully']);
-    } */
-
     public function registerDevice(Request $request)
     {
 
-      /*   $validator = Validator::make($request->all(), [
-            'token' => 'required|string',
-            'device_id' => 'required|exists:devices,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $suspect = auth('suspect')->user(); 
-        
-        $device = Device::findOrFail($request->device_id);
-        
-        // Verifica que el dispositivo esté asignado al sospechoso autenticado
-        if ($suspect->device_id !== $device->id) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        // Actualiza el token FCM del dispositivo
-        $device->update(['fcm_token' => $request->token]);
-
-        return response()->json(['message' => 'Device registered successfully']); */
 
         $validator = Validator::make($request->all(), [
             'token' => 'required|string',
