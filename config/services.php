@@ -31,4 +31,14 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'google' => [
+        'maps' => [
+            'api_key' => env('GOOGLE_MAPS_API_KEY'),
+        ],
+    ],
+
+    'firebase' => [
+        'server_key' => env('FIREBASE_SERVER_KEY'),
+    ],
+
 ];

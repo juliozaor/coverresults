@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en" class="h-100" data-bs-theme="auto">
-   <head>
+<head>
     <script src="{{ asset('assets/js/color-modes.js') }}"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,8 +15,17 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
     <link href="{{ asset('assets/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('assets/dist/css/custom.css') }}" rel="stylesheet">
-   </head>
-   <body class="d-flex flex-column h-100">
+    <style>
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('assets/dist/js/bootstrap.bundle.min.js') }}"></script>
+</head>
+<body class="d-flex flex-column h-100">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
        <a class="navbar-brand" href="index.html"><img class="img-fluid" width="180px" src="{{ asset('assets/dist/img/logo-dark-.svg') }}"/></a>
@@ -26,16 +35,15 @@
        <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
           <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
              <li class="nav-item dropdown">
-               <button class="btn btn-dark dropdown-toggle username" data-bs-toggle="dropdown" aria-expanded="false">
+               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   @auth
                       Hello, {{ Auth::user()->name }}
                   @else
                       Hello, Guest
                   @endauth
                   <img class="ms-2" width="40px" src="{{ asset('assets/dist/img/user.svg') }}"/>
-              </button>
-                <ul class="dropdown-menu">
-                 {{--   <li><a class="dropdown-item" href="index.html"><img class="img-fluid" width="30px" src="{{ asset('assets/dist/img/exit.svg') }}"/> Exit</a></li> --}}
+              </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                  <li>
                   <a class="dropdown-item" href="{{ route('logout') }}"
                       onclick="event.preventDefault();
@@ -52,22 +60,25 @@
           </ul>
        </div>
     </div>
- </nav>
- <nav class="navbar navbar-expand-lg navbar-light bg-light" aria-label="Offcanvas navbar large">
+</nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" aria-label="Offcanvas navbar large">
     <div class="container">
-
         <ul class="nav nav-underline">
             <li class="nav-item">
                 <a class="nav-link{{ $currentRoute == 'map' ? ' active' : '' }}" href="{{ route('map') }}">Map</a>
             </li>
             <li class="nav-item">
-                {{-- <a class="nav-link{{ $currentRoute == 'register_devices' ? ' active' : '' }}" href="{{ route('register_devices') }}">Register devices</a> --}}
                 <a class="nav-link{{ $currentRoute == 'devices.index' ? ' active' : '' }}" href="{{ route('devices.index') }}">Register devices</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link{{ $currentRoute == 'device_assignment' ? ' active' : '' }}" href="{{ route('device_assignment') }}">Device assignment</a>
+                <a class="nav-link{{ $currentRoute == 'suspects.index' ? ' active' : '' }}" href="{{ route('suspects.index') }}">Suspect</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link{{ $currentRoute == 'polygons.index' ? ' active' : '' }}" href="{{ route('polygons.index') }}">Polygons</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link{{ $currentRoute == 'send.notification.form' ? ' active' : '' }}" href="{{ route('send.notification.form') }}">Notifications</a>
             </li>
         </ul>
-
     </div>
- </nav>
+</nav>

@@ -130,7 +130,7 @@
                        </div>
                        <div class="col equal">
                           <div class="funtion-item-card">
-                             <img class="img-fluid p-3 align-items-center" height="120px" src="../assets/dist/img/notification.svg {{ asset('') }}"/>
+                             <img class="img-fluid p-3 align-items-center" height="120px" src="{{ asset('assets/dist/img/notification.svg') }}"/>
                              <h3 class="text-body-emphasis text-center my-3">Message receiving</h3>
                              <p class="my-4">The terminal can receive messages and setting instructions pushed by the platform.</p>
                           </div>
@@ -165,7 +165,7 @@
                        </div>
                        <div class="col equal">
                           <div class="funtion-item-card">
-                             <img class="img-fluid p-3 align-items-center" height="120px" src="../assets/dist/img/update.svg"/>
+                             <img class="img-fluid p-3 align-items-center" height="120px" src="{{ asset('assets/dist/img/update.svg') }}"/>
                              <h3 class="text-body-emphasis text-center my-3">Remote upgrade</h3>
                              <p class="my-4">Yes.</p>
                           </div>
