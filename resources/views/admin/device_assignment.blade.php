@@ -242,7 +242,7 @@ aria-hidden="true">
                                         class="file-upload-image" id="uploadImageEdit">
                                 </label>
                                 <input type="file" class="custom-file-input" id="customFileEdit"
-                                    name="photo" accept="image/*">
+                                    name="editPhoto" accept="image/*">
                                 <label class="custom-file-label text-truncate align-items-center"
                                     style="max-width: 100%" for="customFileEdit">Choose a photo...</label>
                                 <div class="clear-button" id="clearButtonEdit">Delete</div>
@@ -440,7 +440,7 @@ aria-hidden="true">
     $('#editId').val(suspectData.id);
 
     // Actualizar la acción del formulario con el ID correcto
-    $('#editSuspectForm').attr('action', '/suspects/' + suspectData.id);
+    $('#editSuspectForm').attr('action', '{{ url('suspects') }}/' + suspectData.id);
 
     // Mostrar la imagen actual
     if (suspectData.photo) {
@@ -523,6 +523,32 @@ aria-hidden="true">
 
     });
 
+    $('#editState').change(function() {
+            var stateId = $(this).val();
+            var citySelect = $('#editCity');
+            
+            // Limpiar el campo de selección de ciudad
+            citySelect.empty();
+            citySelect.append('<option value="">select a city</option>');
+            
+            if (stateId) {
+                $.ajax({
+                    url: `{{ url('get-cities') }}/${stateId}`,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
+                        $.each(data, function(key, value) {
+                            citySelect.append(`<option value="${value.id}">${value.name}</option>`);
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching cities:', error);
+                    }
+                });
+            }
+        });
+
         $('#deleteModal').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget); // Botón que activó el modal
                 var suspectId = button.data('suspect-id');
@@ -532,6 +558,9 @@ aria-hidden="true">
                 $('#deleteSuspectForm').attr('action', formAction);
                 
             });
+
+
+
 
 </script>
 

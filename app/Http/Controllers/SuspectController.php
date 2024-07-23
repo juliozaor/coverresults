@@ -65,12 +65,12 @@ class SuspectController extends Controller
 
     public function store(Request $request)
 {
-    $request->validate([
+ /*    $request->validate([
         'name' => 'required|string|max:255',
         'lastname' => 'required|string|max:255',
         'email' => 'required|string|email|max:255|unique:suspects',
         // Agrega otras reglas de validación necesarias aquí
-    ]);
+    ]); */
 
     // Procesa la carga de la imagen
     if ($request->hasFile('photo')) {
@@ -151,11 +151,11 @@ class SuspectController extends Controller
 
         
 
-        if ($request->hasFile('photo')) {
+        if ($request->hasFile('editPhoto')) {
             if ($suspect->photo) {
                 Storage::disk('public')->delete($suspect->photo);
             }
-            $data['photo'] = $request->file('photo')->store('photos', 'public');
+            $data['photo'] = $request->file('editPhoto')->store('photos', 'public');
         }
 
         $suspect->update($data);

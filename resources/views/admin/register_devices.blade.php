@@ -20,9 +20,9 @@
                                     <input type="text" name="search" class="form-control" placeholder="Search..."
                                         aria-label="search" aria-describedby="button-addon2"
                                         value="{{ request('search') }}" />
-                                    <button class="btn btn-primary" type="submit" id="button-addon2"><img
-                                            class="img-fluid" width="20"
-                                            src="{{ asset('assets/dist/img/search.svg') }}" /></button>
+                                    <button class="btn btn-primary" type="submit" id="button-addon2">
+                                        <img class="img-fluid" width="20" src="{{ asset('assets/dist/img/search.svg') }}" />
+                                    </button>
                                 </div>
                             </form>
                         </div>

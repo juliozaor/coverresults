@@ -69,7 +69,7 @@
                 <a class="nav-link{{ $currentRoute == 'map' ? ' active' : '' }}" href="{{ route('map') }}">Map</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link{{ $currentRoute == 'devices.index' ? ' active' : '' }}" href="{{ route('devices.index') }}">Register devices</a>
+                <a class="nav-link{{ $currentRoute == 'devices.index' ? ' active' : '' }}" href="{{ route('devices.index') }}">Devices</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link{{ $currentRoute == 'suspects.index' ? ' active' : '' }}" href="{{ route('suspects.index') }}">Suspect</a>

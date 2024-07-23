@@ -23,9 +23,9 @@ class DeviceController extends Controller
                 ->orWhere('serial', 'LIKE', "%{$search}%");
         }
 
-        $devices = $query->paginate(10); // Cambia '10' al número de elementos por página que desees.
+        $devices = $query->paginate(10);
         $totalDevices = $query->count();
-        $polygons = Polygon::all(); // Obtener todos los polígonos para la vista
+        $polygons = Polygon::all();
         return view('admin.register_devices', compact('devices', 'totalDevices', 'search', 'polygons'));
     }
 
