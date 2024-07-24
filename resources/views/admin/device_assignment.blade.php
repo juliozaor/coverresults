@@ -1,6 +1,6 @@
 @include('includes.auth_menu', ['currentRoute' => 'suspects.index'])
 <main class="flex-shrink-0">
-    <div class="container">
+    <div class="container  mt-3">
         <div class="table-container" style="overflow:auto;">
             <div class="mb-3">
                 <div class="container text-center">

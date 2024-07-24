@@ -1,6 +1,6 @@
 @include('includes.auth_menu', ['currentRoute' => 'devices.index'])
 <main class="flex-shrink-0">
-    <div class="container">
+    <div class="container  mt-3">
         <div class="table-container">
             <div class="mb-3">
                 <div class="container text-center">

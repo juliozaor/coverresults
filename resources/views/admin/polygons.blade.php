@@ -1,17 +1,7 @@
-<!doctype html>
-<html lang="en" class="h-100">
-   <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>Polygon Management</title>
-      <link rel="icon" type="image/png" href="{{ asset('assets/dist/img/favicon.png') }}">
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
-      <link href="{{ asset('assets/dist/css/custom.css') }}" rel="stylesheet">
-   </head>
-   <body class="d-flex flex-column bg-light">
+
       @include('includes.auth_menu', ['currentRoute' => 'polygons.index'])
       <main class="flex-shrink-0">
-         <div class="container">
+         <div class="container mt-3">
             <div class="table-container" style="overflow:auto;">
                <div class="mb-3">
                   <div class="container text-center">
@@ -116,37 +106,6 @@
          </div>
      </div>
 
-      <!-- Modal para Editar Polígono -->
-    {{--   <div class="modal modal-lg fade" id="editPolygonModal" tabindex="-1" aria-labelledby="editPolygonModalLabel" aria-hidden="true">
-         <div class="modal-dialog">
-             <div class="modal-content">
-                 <div class="modal-header">
-                     <h1 class="modal-title fs-5" id="editPolygonModalLabel">Edit Polygon</h1>
-                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                 </div>
-                 <form id="editPolygonForm" method="POST" action="">
-                     @csrf
-                     @method('PUT')
-                     <div class="modal-body">
-                         <div class="row">
-                             <div class="col-md-6 mb-3">
-                                 <label for="editPolygonName" class="form-label">Name</label>
-                                 <input type="text" class="form-control" id="editPolygonName" name="name" required>
-                             </div>
-                             <div class="col-md-12 mb-3" id="editCoordinatesContainer">
-                                 <!-- Aquí se añadirán dinámicamente los campos de coordenadas -->
-                             </div>
-                         </div>
-                     </div>
-                     <div class="modal-footer">
-                         <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
-                         <button type="submit" class="btn btn-primary rounded-pill">Update</button>
-                     </div>
-                 </form>
-                 <button type="button" id="addEditCoordinate" class="btn btn-success">Add Coordinate</button>
-             </div>
-         </div>
-     </div> --}}
      <div class="modal modal-lg fade" id="editPolygonModal" tabindex="-1" aria-labelledby="editPolygonModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

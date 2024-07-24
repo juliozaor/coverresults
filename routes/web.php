@@ -10,6 +10,7 @@ use App\Http\Controllers\GpsPositionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PolygonController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\LocationLogController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,10 @@ Route::fallback(function () {
 Auth::routes();
 
 // routes/web.php
+
+
+Route::get('/location-logs', [LocationLogController::class, 'index'])->name('location-logs.index');
+Route::get('/location-logs/{id}', [LocationLogController::class, 'show'])->name('location-logs.show');
 
 
 

@@ -1,5 +1,6 @@
 @include('includes.auth_menu', ['currentRoute' => 'map'])
-<div class="container">
+<div class="container  mt-3">
+    <div class="table-container">
     <h2>Edit Profile</h2>
 
     @if (session('success'))
@@ -44,6 +45,6 @@
         <button type="submit" class="btn btn-primary">Update Profile</button>
     </form>
 </div>
-
+</div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>

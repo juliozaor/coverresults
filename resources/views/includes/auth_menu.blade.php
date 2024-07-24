@@ -84,6 +84,9 @@
             <li class="nav-item">
                 <a class="nav-link{{ $currentRoute == 'send.notification.form' ? ' active' : '' }}" href="{{ route('send.notification.form') }}">Notifications</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link{{ $currentRoute == 'location-logs.index' ? ' active' : '' }}" href="{{ route('location-logs.index') }}">Locations Logs</a>
+            </li>
         </ul>
     </div>
 </nav>
