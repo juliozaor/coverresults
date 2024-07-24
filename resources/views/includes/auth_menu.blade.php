@@ -24,7 +24,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('assets/dist/js/bootstrap.bundle.min.js') }}"></script>
-    
 </head>
 <body class="d-flex flex-column h-100">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -45,6 +44,11 @@
                   <img class="ms-2" width="40px" src="{{ asset('assets/dist/img/user.svg') }}"/>
               </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li>
+                      <a class="dropdown-item " href="{{ route('profile.edit') }}">
+                          <img class="img-fluid" width="30px" src="{{ asset('assets/dist/img/edit.svg') }}"/> Edit Profile
+                      </a>
+                  </li>
                  <li>
                   <a class="dropdown-item" href="{{ route('logout') }}"
                       onclick="event.preventDefault();
@@ -83,4 +87,10 @@
         </ul>
     </div>
 </nav>
-@include('components.alert') 
+@include('components.alert')
+
+<!-- Contenido de la vista -->
+@yield('content')
+
+</body>
+</html>

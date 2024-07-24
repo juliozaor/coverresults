@@ -9,6 +9,7 @@ use App\Http\Controllers\DelegateUserController;
 use App\Http\Controllers\GpsPositionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PolygonController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +32,15 @@ Route::fallback(function () {
 
 Auth::routes();
 
-//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// routes/web.php
+
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [UserController::class, 'update'])->name('profile.update');
+});
+
 
 
 Route::get('/map', [AdminController::class, 'map'])->name('map');
