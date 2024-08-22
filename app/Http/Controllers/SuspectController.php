@@ -23,8 +23,9 @@ class SuspectController extends Controller
         $states = State::all();
         $cities = City::all();
         $devices = Device::all();
+        $users = User::all();
     
-        $query = Suspect::with(['device']);
+        $query = Suspect::with(['device', 'states']);
     
         if ($request->has('query') && $request->input('query') != '') {
             $query->where(function($q) use ($request) {
@@ -50,7 +51,7 @@ class SuspectController extends Controller
             ]);
         }
     
-        return view('admin.device_assignment', compact('suspects','states', 'cities', 'devices'));
+        return view('admin.device_assignment', compact('suspects','states', 'cities', 'devices', 'users'));
     }
     
 
@@ -65,13 +66,6 @@ class SuspectController extends Controller
 
     public function store(Request $request)
 {
- /*    $request->validate([
-        'name' => 'required|string|max:255',
-        'lastname' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:suspects',
-        // Agrega otras reglas de validación necesarias aquí
-    ]); */
-
     // Procesa la carga de la imagen
     if ($request->hasFile('photo')) {
         $imagePath = $request->file('photo')->store('photos', 'public');
@@ -84,7 +78,8 @@ class SuspectController extends Controller
 
     // Crea un nuevo sospechoso con los datos del formulario
     $suspect = new Suspect([
-        'user_id' => Auth::id(),
+        //'user_id' => Auth::id(),
+        'user_id' => $request->user,
         'name' => $request->name,
         'lastname' => $request->lastname,
         'identification' => $request->identification,
@@ -104,7 +99,7 @@ class SuspectController extends Controller
     $suspect->save();
 
     // Envía la contraseña temporal por correo electrónico
-    Mail::to($suspect->email)->send(new TemporaryPasswordMail($temporaryPassword));
+   // Mail::to($suspect->email)->send(new TemporaryPasswordMail($temporaryPassword));
 
     return redirect()->route('suspects.index')->with('success', 'Suspect created successfully.');
 }
@@ -121,24 +116,10 @@ class SuspectController extends Controller
 
     public function update(Request $request, Suspect $suspect)
     {
-       /*  $request->validate([
-            'name' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-            'identification' => 'required|integer',
-            'date_dirth' => 'required|date',
-            'state' => 'required|integer|exists:states,id',
-            'city' => 'required|integer|exists:cities,id',
-            'state_id' => 'required|integer|exists:states,id',
-            'city_id' => 'required|integer|exists:cities,id',
-            'address' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:15',
-            'mobile' => 'nullable|string|max:15',
-            'email' => 'required|string|email|max:255',
-           // 'device_id' => 'required|integer|exists:devices,id',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]); */
+    
 
         $data = $request->all();
+        $data['user_id'] = $data['editUser'];
         $data['state'] = $data['editState'];
         $data['city'] = $data['editCity'];
         $data['name'] = $data['editName'];
@@ -149,7 +130,13 @@ class SuspectController extends Controller
         $data['mobile'] = $data['editMobile'];
         $data['email'] = $data['editEmail'];
 
+        $emailValid = false;
+        $message = 'Suspect updated successfully.';
+
         
+      if($suspect->email != $data['email']){
+        $emailValid = true;
+      }
 
         if ($request->hasFile('editPhoto')) {
             if ($suspect->photo) {
@@ -160,7 +147,14 @@ class SuspectController extends Controller
 
         $suspect->update($data);
 
-        return redirect()->route('suspects.index')->with('success', 'Suspect updated successfully.');
+        if($emailValid){
+            $temporaryPassword = Str::random(8);
+        $data['password'] = Hash::make($temporaryPassword);
+        Mail::to($data['email'])->send(new TemporaryPasswordMail($temporaryPassword));
+        $message = 'Suspect updated successfully, new password sent to you';
+        }
+
+        return redirect()->route('suspects.index')->with('success', $message);
     }
 
     public function destroy($id)

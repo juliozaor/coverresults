@@ -39,6 +39,14 @@ class SuspectAuthController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
+        // Procesa la carga de la imagen
+    if ($request->hasFile('photo')) {
+        $imagePath = $request->file('photo')->store('photos', 'public');
+    } else {
+        $imagePath = null;
+    }
+
+
         $suspect = Suspect::create([
             'user_id' => $request->user_id,
            // 'device_id' => $request->device_id,
@@ -55,7 +63,7 @@ class SuspectAuthController extends Controller
             'address' => $request->address,
             'phone' => $request->phone,
             'mobile' => $request->mobile,
-            'photo' => $request->photo,
+            'photo' => $imagePath
         ]);
 
         return response()->json(['message' => 'Suspect registered successfully', 'suspect' => $suspect]);

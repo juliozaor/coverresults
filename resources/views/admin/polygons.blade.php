@@ -12,10 +12,16 @@
                            </button>
                         </div>
                         <div class="col-md-4 ps-3 mb-3">
-                           <div class="input-group mb-3">
-                              <input type="text" class="form-control" placeholder="Search..." aria-label="search" aria-describedby="button-addon2"/>
-                              <a class="btn btn-primary" type="button" id="button-addon2"><img class="img-fluid" width="20" src="{{ asset('assets/dist/img/search.svg') }}"/></a>
-                           </div>
+                            <form action="{{ route('polygons.index') }}" method="GET">
+                                <div class="input-group mb-3">
+                                    <input type="text" name="search" class="form-control" placeholder="Search..."
+                                        aria-label="search" aria-describedby="button-addon2"
+                                        value="{{ request('search') }}" />
+                                    <button class="btn btn-primary" type="submit" id="button-addon2">
+                                        <img class="img-fluid" width="20" src="{{ asset('assets/dist/img/search.svg') }}" />
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                         <div class="col-md-1 ps-3 my-1">
                            <h5><span class="badge text-bg-secondary rounded-pill">Total: {{ count($polygons) }}</span></h5>
@@ -35,7 +41,7 @@
                   <tbody id="table-body">
                      @foreach ($polygons as $index => $polygon)
                         <tr>
-                           <td align="center">{{ $index + 1 }}</td>
+                           <td align="center">{{ $polygon->id }}</td>
                            <td align="center">{{ $polygon->name }}</td>
                            <td align="center">{{ Str::limit($polygon->coordinates, 50) }}</td>
                            <td align="center">
@@ -287,6 +293,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+
     const editPolygonModal = document.getElementById('editPolygonModal');
     const editPolygonForm = document.getElementById('editPolygonForm');
     const editCoordinatesContainer = document.getElementById('editCoordinatesContainer');
@@ -416,6 +423,9 @@
         });
     });
 });
+
+
+
 
     </script>
     

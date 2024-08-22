@@ -22,7 +22,7 @@ class DeviceController extends Controller
     {
         $search = $request->input('search', '');
 
-        $query = Device::query();
+        $query = Device::with(['polygon', 'suspect']);
 
         if ($search) {
             $query->where('name', 'LIKE', "%{$search}%")
@@ -64,10 +64,10 @@ class DeviceController extends Controller
         return redirect()->back()->with('success', 'Device updated successfully.');
     }
 
-    public function destroy(Device $device)
+   
+    public function destroy($id)
     {
-        $device->delete();
-
+        Device::findOrFail($id)->delete();
         return redirect()->route('devices.index')->with('success', 'Device deleted successfully.');
     }
 
@@ -114,15 +114,17 @@ class DeviceController extends Controller
     $wasBatteryEmpty = $alert->currently_battery_empty;
     $wasPulseless = $alert->currently_pulseless;
 
-    $admin = User::find(1);
+    $admin = User::find($suspect->user_id);
     $message = '';
+
+    $currentDateTime = Carbon::now()->toDateTimeString();
 
     // Verificar si el dispositivo está fuera del polígono
     if ($polygon && !$this->isInsidePolygon($device, $polygon)) {
         if (!$wasOutOfLocation) {
             $alert->out_of_location_count++;
             $alert->currently_out_of_location = true;
-            $message = 'Suspect '. $suspect->name.' '.$suspect->lastname .' \'s outside his permitted location';
+            $message = $suspect->name.' '.$suspect->lastname .' \'s outside his permitted location at ' . $currentDateTime;
 
             // Enviar correo solo si se genera la alerta
             Mail::to($suspect->email)->send(new AlertNotification($message));
@@ -132,7 +134,7 @@ class DeviceController extends Controller
         if ($wasOutOfLocation) {
             $alert->currently_out_of_location = false;
             $alert->out_of_location_count--;
-            $message = 'Suspect '. $suspect->name.' '.$suspect->lastname .' has returned to his permitted location';
+            $message = $suspect->name.' '.$suspect->lastname .' has returned to his permitted location at ' . $currentDateTime;
             Mail::to($suspect->email)->send(new AlertNotification($message));
             Mail::to($admin->email)->send(new AlertNotification($message));
         }
@@ -162,7 +164,7 @@ class DeviceController extends Controller
     if ($wasPulseless) {
         $alert->currently_pulseless = false;
         $alert->pulseless_count--;
-        $message = 'Suspect ' . $suspect->name . ' ' . $suspect->lastname . '\'s device has reestablished connection';
+        $message = $suspect->name . ' ' . $suspect->lastname . '\'s device has reestablished connection at ' . $currentDateTime;
         Mail::to($suspect->email)->send(new AlertNotification($message));
         Mail::to($admin->email)->send(new AlertNotification($message));
     }

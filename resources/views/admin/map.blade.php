@@ -32,13 +32,13 @@
                                         <small>See all</small>
                                     </a>
                                 </li>
-                                <li class="nav-item">
+                               {{--  <li class="nav-item">
                                     <a href="#" class="nav-link bg-warning text-dark align-items-center d-flex justify-content-between mb-2" data-alert-type="battery_empty">
                                         <img src="{{ asset('assets/dist/img/low-bat.svg') }}"/>
                                         Battery empty <span class="badge text-bg-dark" id="battery-empty-count">{{ $batteryEmptyCount }}</span>
                                         <small>See all</small>
                                     </a>
-                                </li>
+                                </li> --}}
                             </ul>
                         </div>
                         <div class="container-rounded">

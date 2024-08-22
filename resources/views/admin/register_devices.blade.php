@@ -5,16 +5,7 @@
             <div class="mb-3">
                 <div class="container text-center">
                     <div class="row">
-                        {{-- <div class="col-6 col-md-auto mb-3"><button type="button" class="btn btn-primary rounded-pill"
-                                data-bs-toggle="modal" data-bs-target="#newDeviceModal">
-                                New +
-                            </button>
-                        </div> --}}
-                        <div class="col-md-4 ps-3">
-                            {{-- <div class="input-group mb-3">
-                         <input type="text" class="form-control" placeholder="Search..." aria-label="search" aria-describedby="button-addon2"/>
-                         <a class="btn btn-primary" type="button" id="button-addon2"><img class="img-fluid" width="20" src="{{ asset('assets/dist/img/search.svg') }}"/></a>
-                      </div> --}}
+                        <div class="col-6 col-md-auto mb-3">
                             <form action="{{ route('devices.index') }}" method="GET">
                                 <div class="input-group mb-3">
                                     <input type="text" name="search" class="form-control" placeholder="Search..."
@@ -31,7 +22,6 @@
                             </h5>
                         </div>
                     </div>
-                </div>
                 <!-- Modal create -->
                 <div class="modal modal-lg fade" id="newDeviceModal" tabindex="-1"
                     aria-labelledby="newDeviceModalModalLabel" aria-hidden="true">
@@ -76,6 +66,7 @@
                         <td align="center"><strong>Name</strong></td>
                         <td align="center"><strong>Serial</strong></td>
                         <td align="center"><strong>Polygon Id</strong></td>
+                        <td align="center"><strong>Suspect</strong></td>
                         <td align="center"><strong>Creation Date</strong></td>
                         <td class="table-border-left" align="center"><strong>Actions</strong></td>
                     </tr>
@@ -86,7 +77,8 @@
                             <td class="table-border-right" align="center">{{ $device->id }}</td>
                             <td align="center">{{ $device->name }}</td>
                             <td align="center">{{ $device->serial }}</td>
-                            <td align="center">{{ $device->polygon_id }}</td>
+                            <td align="center">{{ $device->polygon->name }}</td>
+                            <td align="center">{{ $device->suspect->name }} {{ $device->suspect->lastname }}</td>
                             <td align="center">{{ $device->created_at->format('d / m / Y') }}</td>
                             <td class="table-border-left" align="center" width="100px">
                                 <div class="d-flex justify-content-center actions">
@@ -169,7 +161,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="editSerial" class="form-label">Serial</label>
-                        <input type="text" class="form-control" id="editSerial" name="serial" required>
+                        <input type="text" class="form-control" id="editSerial" name="serial" required disabled>
                     </div>
                     <div class="mb-3">
                         <label for="editPolygon" class="form-label">Polygon</label>
@@ -199,38 +191,17 @@
                 <h6>Are you sure you want to delete this device?</h6>
             </div>
             <div class="modal-footer text-center">
-                <button type="button" class="btn btn-outline-secondary rounded-pill"
-                    data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger rounded-pill">Yes, continue</button>
+                <form id="deleteDeviceForm" method="POST" action="">
+                    @csrf
+                    @method('DELETE')
+                    <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger rounded-pill">Yes, continue</button>
+                 </form>
             </div>
         </div>
     </div>
 </div>
 </body>
-{{-- <script>
-    'use strict';
-    (function(document, window, index) {
-        var inputs = document.querySelectorAll('.inputfile');
-        Array.prototype.forEach.call(inputs, function(input) {
-            var label = input.nextElementSibling,
-                labelVal = label.innerHTML;
-
-            input.addEventListener('change', function(e) {
-                var fileName = '';
-                if (this.files && this.files.length > 1)
-                    fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}',
-                        this.files.length);
-                else
-                    fileName = e.target.value.split('\\').pop();
-
-                if (fileName)
-                    label.querySelector('span').innerHTML = fileName;
-                else
-                    label.innerHTML = labelVal;
-            });
-        });
-    }(document, window, 0));
-</script> --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         $('#editModal').on('show.bs.modal', function(event) {
@@ -249,8 +220,10 @@
         $('#deleteModal').on('show.bs.modal', function(event) {
             const button = $(event.relatedTarget);
             const deviceId = button.data('device-id');
-            const form = document.getElementById('deleteDeviceForm');
-            form.action = `{{ url('devices') }}/${deviceId}`;
+            console.log(deviceId);
+                // Actualizar la acción del formulario de eliminación
+                var formAction = "{{ url('devices') }}/" + deviceId;
+                $('#deleteDeviceForm').attr('action', formAction);
         });
     });
 </script>

@@ -37,7 +37,7 @@
              <li class="nav-item dropdown">
                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   @auth
-                      Hello, {{ Auth::user()->name }}
+                      Hello, {{ Auth::user()->name }} 
                   @else
                       Hello, Guest
                   @endauth
@@ -86,6 +86,11 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link{{ $currentRoute == 'location-logs.index' ? ' active' : '' }}" href="{{ route('location-logs.index') }}">Locations Logs</a>
+            </li>
+            <li class="nav-item">
+                @role('super')
+                <a class="nav-link{{ $currentRoute == 'users.index' ? ' active' : '' }}" href="{{ route('users.index') }}">Users</a>
+                @endrole
             </li>
         </ul>
     </div>

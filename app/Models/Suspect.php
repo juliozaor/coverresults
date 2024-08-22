@@ -35,9 +35,9 @@ protected $hidden = [
 ];
 
 
-    public function state()
+    public function states()
     {
-        return $this->belongsTo(State::class);
+        return $this->belongsTo(State::class, 'state');
     }
 
     public function city()

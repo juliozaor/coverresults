@@ -42,8 +42,8 @@ Route::get('/location-logs/{id}', [LocationLogController::class, 'show'])->name(
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [UserController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [UserController::class, 'update'])->name('profile.update');
+    Route::get('/profile', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
 });
 
 
@@ -54,7 +54,12 @@ Route::get('/search-suspects', [AdminController::class, 'searchSuspects'])->name
 //Route::get('/device-assignment', [AdminController::class, 'deviceAssignment'])->name('device_assignment');
 
 Route::resource('devices', DeviceController::class);
-Route::resource('users', UserController::class);
+/* Route::resource('users', UserController::class); */
+/* Route::middleware(['role:super'])->group(function () {
+    Route::resource('users', UserController::class);
+});
+ */
+Route::resource('users', UserController::class)->middleware('role:super');
 
 Route::resource('delegate_users', DelegateUserController::class);
 Route::resource('gps_positions', GpsPositionController::class);

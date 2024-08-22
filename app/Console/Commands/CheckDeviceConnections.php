@@ -23,10 +23,11 @@ class CheckDeviceConnections extends Command
     {
         $threshold = Carbon::now()->subMinutes(20); // Ajustar el tiempo según sea necesario
         $devices = Device::where('updated_at', '<', $threshold)->has('suspect')->get();
-        $admin = User::find(1);
+        $currentDateTime = Carbon::now()->toDateTimeString();
         
         foreach ($devices as $device) {
             $suspect = $device->suspect;
+            $admin = User::find($suspect->user_id);
 
             if ($suspect) {
                 // Verificar y actualizar el estado de conexión del dispositivo
@@ -38,7 +39,7 @@ class CheckDeviceConnections extends Command
                         $alert->pulseless_count++;
                         $alert->currently_pulseless = true;
 
-                        $message = 'Suspect ' . $suspect->name . ' ' . $suspect->lastname . '\'s device has lost connection';
+                        $message = $suspect->name . ' ' . $suspect->lastname . '\'s device has lost connection at ' . $currentDateTime;
                         Mail::to($suspect->email)->send(new AlertNotification($message));
                         Mail::to($admin->email)->send(new AlertNotification($message));
                     }

@@ -23,7 +23,7 @@
                     <td>{{ $suspect->id }}</td>
                     <td>{{ $suspect->name }}</td>
                     <td>{{ $suspect->age }}</td>
-                    <td>{{ $suspect->state }}</td>
+                    <td>{{ $suspect->states->name }}</td>
                     <td>{{ $suspect->address }}</td>
                     <td>{{ $suspect->user->name }}</td>
                     <td>{{ $suspect->device->name }}</td>
