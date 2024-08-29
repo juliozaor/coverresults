@@ -22,7 +22,7 @@ class AdminController extends Controller
         $devices = Device::with('suspect')->get()->map(function ($device) {
             if ($device->suspect && $device->suspect->photo) {
                 // Si el sospechoso tiene una foto, usa la URL completa
-                $device->photo_url = asset('storage/' . $device->suspect->photo);
+                $device->photo_url = asset('public/' . $device->suspect->photo);
             } else {
                 // Si no, usa la imagen por defecto
                 $device->photo_url = asset('assets/dist/img/upload.svg');
@@ -86,7 +86,7 @@ public function searchSuspects(Request $request)
         ->get()
         ->map(function ($device) {
             if ($device->suspect && $device->suspect->photo) {
-                $device->photo_url = asset('storage/' . $device->suspect->photo);
+                $device->photo_url = asset('public/' . $device->suspect->photo);
             } else {
                 $device->photo_url = asset('assets/dist/img/upload.svg');
             }

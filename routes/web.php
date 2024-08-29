@@ -12,6 +12,10 @@ use App\Http\Controllers\PolygonController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\LocationLogController;
 
+use Illuminate\Http\Request;
+use App\Exports\LocationLogsExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,18 +31,17 @@ Route::get('/', function () {
     return view('welcome');
 })->middleware('guest');
 
-Route::fallback(function () {
-   
-});
-
 Auth::routes();
 
 // routes/web.php
 
 
 Route::get('/location-logs', [LocationLogController::class, 'index'])->name('location-logs.index');
+Route::get('location-logs/export', function(Request $request) {
+    $search = $request->query('search');
+    return Excel::download(new LocationLogsExport($search), 'location_logs.xlsx');
+})->name('location-logs.export');
 Route::get('/location-logs/{id}', [LocationLogController::class, 'show'])->name('location-logs.show');
-
 
 
 Route::middleware('auth')->group(function () {
@@ -83,3 +86,8 @@ Route::get('/session-test', function () {
     session(['test' => 'Laravel Session Test']);
     return session('test');
 });
+
+
+
+
+

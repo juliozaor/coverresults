@@ -227,6 +227,19 @@
             coordinates.push({ lat: parseFloat(lat), lng: parseFloat(lng) });
         });
 
+
+        // Validar el número de coordenadas
+        if (coordinates.length === 2) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Polygon',
+                text: 'You cannot create a polygon with exactly two points. Please add more coordinates or remove one.',
+                timer: 3000,
+                showConfirmButton: false
+            });
+            return;
+        }
+
         const formData = new FormData();
         formData.append('name', name);
         formData.append('coordinates', JSON.stringify(coordinates));
@@ -365,6 +378,19 @@
                 lng: parseFloat(inputGroup.querySelector('.lng-input').value)
             };
         });
+
+         // Validar el número de coordenadas
+         if (coordinatesArray.length === 2) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Polygon',
+                text: 'You cannot create a polygon with exactly two points. Please add more coordinates or remove one.',
+                timer: 3000,
+                showConfirmButton: false
+            });
+            return;
+        }
+        
         const coordinatesJson = JSON.stringify(coordinatesArray);
         const coordinatesInput = document.createElement('input');
         coordinatesInput.type = 'hidden';
@@ -424,15 +450,7 @@
     });
 });
 
-
-
-
     </script>
-    
-    
-    
-    
-    
     
 
 

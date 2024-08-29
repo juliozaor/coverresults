@@ -10,8 +10,6 @@ class PolygonController extends Controller
 
     public function index(Request $request)
     {
-       /*  $polygons = Polygon::all();
-        return view('admin.polygons', compact('polygons')); */
 
         $search = $request->input('search', '');
 
@@ -41,18 +39,11 @@ class PolygonController extends Controller
             'coordinates' => 'required|json',
         ]);
 
-       /*  $polygon = new Polygon();
-        $polygon->name = $request->name;
-        $polygon->coordinates = $request->coordinates;
-        $polygon->save();
-
-        return redirect()->route('polygons.index')->with('success', 'Polygon created successfully'); */
 
         $polygon = Polygon::create([
             'name' => $request->name,
             'coordinates' => $request->coordinates,
         ]);
-        //return redirect()->route('polygons.index')->with('success', 'Polygon created successfully');
         return response()->json(['success' => true, 'polygon_id' => $polygon->id]);
         
     }
@@ -71,17 +62,6 @@ class PolygonController extends Controller
 
     public function update(Request $request, $id)
     {
-       /*  $request->validate([
-            'name' => 'required|string|max:255',
-            'coordinates' => 'required|json',
-        ]);
-
-        $polygon = Polygon::findOrFail($id);
-        $polygon->name = $request->name;
-        $polygon->coordinates = $request->coordinates;
-        $polygon->save();
-
-        return redirect()->route('polygons.index')->with('success', 'Polygon updated successfully'); */
        
         $request->validate([
             'name' => 'required|string|max:255',
@@ -104,28 +84,5 @@ class PolygonController extends Controller
 
         return redirect()->route('polygons.index')->with('success', 'Polygon deleted successfully');
     }
-
-   /*  public function storeMap(Request $request)
-    {
-        $request->validate([
-            'coordinates' => 'required|array',
-            'coordinates.*.lat' => 'required|numeric',
-            'coordinates.*.lng' => 'required|numeric',
-        ]);
-
-        $polygon = Polygon::create([
-            'coordinates' => json_encode($request->coordinates) // Guardar como JSON
-        ]);
-
-        return response()->json(['success' => true, 'polygon_id' => $polygon->id]);
-    }
-
-    public function destroyMap($id)
-    { 
-            $polygon = Polygon::findOrFail($id);
-        $polygon->delete();
-
-        return response()->json(['success' => true]);
-    } */
     
 }

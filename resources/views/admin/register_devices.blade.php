@@ -65,7 +65,7 @@
                         <td class="table-border-right" align="center"><strong>ID.</strong></td>
                         <td align="center"><strong>Name</strong></td>
                         <td align="center"><strong>Serial</strong></td>
-                        <td align="center"><strong>Polygon Id</strong></td>
+                        <td align="center"><strong>Polygon Name</strong></td>
                         <td align="center"><strong>Suspect</strong></td>
                         <td align="center"><strong>Creation Date</strong></td>
                         <td class="table-border-left" align="center"><strong>Actions</strong></td>

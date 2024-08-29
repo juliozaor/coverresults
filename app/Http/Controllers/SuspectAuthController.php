@@ -40,11 +40,14 @@ class SuspectAuthController extends Controller
         }
 
         // Procesa la carga de la imagen
-    if ($request->hasFile('photo')) {
-        $imagePath = $request->file('photo')->store('photos', 'public');
-    } else {
-        $imagePath = null;
-    }
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $photoName = time() . '_' . $photo->getClientOriginalName();
+            $photoPath = 'upload/photos/' . $photoName;
+            $photo->move(public_path('upload/photos'), $photoName);
+        } else {
+            $photoPath = null;
+        }
 
 
         $suspect = Suspect::create([
@@ -63,7 +66,7 @@ class SuspectAuthController extends Controller
             'address' => $request->address,
             'phone' => $request->phone,
             'mobile' => $request->mobile,
-            'photo' => $imagePath
+            'photo' => $photoPath
         ]);
 
         return response()->json(['message' => 'Suspect registered successfully', 'suspect' => $suspect]);
@@ -72,6 +75,7 @@ class SuspectAuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
+      
 
         try {
             if (!$token = auth('suspect')->attempt($credentials)) {

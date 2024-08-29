@@ -68,11 +68,13 @@ class SuspectController extends Controller
 {
     // Procesa la carga de la imagen
     if ($request->hasFile('photo')) {
-        $imagePath = $request->file('photo')->store('photos', 'public');
+        $photo = $request->file('photo');
+        $photoName = time() . '_' . $photo->getClientOriginalName();
+        $photoPath = 'upload/photos/' . $photoName;
+        $photo->move(public_path('upload/photos'), $photoName);
     } else {
-        $imagePath = null;
+        $photoPath = null;
     }
-
     // Genera una contraseña temporal
     $temporaryPassword = Str::random(8);
 
@@ -93,13 +95,13 @@ class SuspectController extends Controller
         'mobile' => $request->mobile,
         'email' => $request->email,
         'password' => Hash::make($temporaryPassword),
-        'photo' => $imagePath, // Guarda la ruta de la imagen
+        'photo' => $photoPath, // Guarda la ruta de la imagen
     ]);
 
     $suspect->save();
 
     // Envía la contraseña temporal por correo electrónico
-   // Mail::to($suspect->email)->send(new TemporaryPasswordMail($temporaryPassword));
+    Mail::to($suspect->email)->send(new TemporaryPasswordMail($temporaryPassword));
 
     return redirect()->route('suspects.index')->with('success', 'Suspect created successfully.');
 }
@@ -138,21 +140,38 @@ class SuspectController extends Controller
         $emailValid = true;
       }
 
-        if ($request->hasFile('editPhoto')) {
-            if ($suspect->photo) {
-                Storage::disk('public')->delete($suspect->photo);
-            }
-            $data['photo'] = $request->file('editPhoto')->store('photos', 'public');
+if ($request->hasFile('editPhoto') && $request->file('editPhoto')->isValid()) {
+    // Eliminar la foto anterior si existe
+    if ($suspect->photo) {
+        $oldPhotoPath = public_path($suspect->photo);
+        if (file_exists($oldPhotoPath)) {
+            unlink($oldPhotoPath);
         }
+    }
+    
+    // Almacenar la nueva foto y guardar la ruta
+    $photo = $request->file('editPhoto');
+    $photoName = time() . '_' . $photo->getClientOriginalName();
+    $photoPath = 'upload/photos/' . $photoName;
+    $photo->move(public_path('upload/photos'), $photoName);
+    
+    $suspect->photo = $photoPath;
+}
 
-        $suspect->update($data);
 
         if($emailValid){
             $temporaryPassword = Str::random(8);
         $data['password'] = Hash::make($temporaryPassword);
+        $suspect->update($data);
+        
         Mail::to($data['email'])->send(new TemporaryPasswordMail($temporaryPassword));
         $message = 'Suspect updated successfully, new password sent to you';
+
+        }else{
+            $suspect->update($data);
+
         }
+
 
         return redirect()->route('suspects.index')->with('success', $message);
     }

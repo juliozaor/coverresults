@@ -64,125 +64,158 @@ class DeviceController extends Controller
         return redirect()->back()->with('success', 'Device updated successfully.');
     }
 
-   
+
     public function destroy($id)
     {
         Device::findOrFail($id)->delete();
         return redirect()->route('devices.index')->with('success', 'Device deleted successfully.');
     }
 
- 
 
- public function updateLocation($serial, Request $request)
-{
-    $request->validate([
-        'latitude' => 'required|numeric',
-        'longitude' => 'required|numeric',
-        'battery_level' => 'required|numeric'
-    ]);
 
-    $device = Device::where('serial', $serial)->firstOrFail();
-    $device->latitude = $request->latitude;
-    $device->longitude = $request->longitude;
-    $device->battery_level = $request->battery_level;
-    $device->save();
+    public function updateLocation($serial, Request $request)
+    {
+        $request->validate([
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'battery_level' => 'required|numeric'
+        ]);
 
-    $suspect = $device->suspect;
-    if ($suspect) {
-        $currentDate = now()->format('Y-m-d');
-        $latitude = $request->latitude;
-        $longitude = $request->longitude;
-        $currentTime = Carbon::now()->toTimeString();
+        $device = Device::where('serial', $serial)->firstOrFail();
+        $device->latitude = $request->latitude;
+        $device->longitude = $request->longitude;
+        $device->battery_level = $request->battery_level;
+        $device->save();
 
-        $locationLog = LocationLog::firstOrCreate(
-            ['device_id' => $device->id, 'date' => $currentDate],
-            ['suspect_id' => $suspect->id, 'locations' => []]
-        );
+        $suspect = $device->suspect;
+        if ($suspect) {
+            $currentDate = now()->format('Y-m-d');
+            $latitude = $request->latitude;
+            $longitude = $request->longitude;
+            $currentTime = Carbon::now()->toTimeString();
 
-        $locations = $locationLog->locations;
-        //$locations[] = ['latitude' => $latitude, 'longitude' => $longitude];
-        $locations[] = ['latitude' => $latitude, 'longitude' => $longitude, 'time' => $currentTime];
-        $locationLog->locations = $locations;
-        $locationLog->save();
-    }
+            $locationLog = LocationLog::firstOrCreate(
+                ['device_id' => $device->id, 'date' => $currentDate],
+                ['suspect_id' => $suspect->id, 'locations' => []]
+            );
 
-    $polygon = $device->polygon;
-    $alert = Alert::firstOrCreate(['device_id' => $device->id]);
+            $locations = $locationLog->locations;
+            //$locations[] = ['latitude' => $latitude, 'longitude' => $longitude];
+            $locations[] = ['latitude' => $latitude, 'longitude' => $longitude, 'time' => $currentTime];
+            $locationLog->locations = $locations;
+            $locationLog->save();
+        }
 
-    // Estado anterior de las alertas
-    $wasOutOfLocation = $alert->currently_out_of_location;
-    $wasBatteryEmpty = $alert->currently_battery_empty;
-    $wasPulseless = $alert->currently_pulseless;
+        $polygon = $device->polygon;
+        $alert = Alert::firstOrCreate(['device_id' => $device->id]);
 
-    $admin = User::find($suspect->user_id);
-    $message = '';
+        // Estado anterior de las alertas
+        $wasOutOfLocation = $alert->currently_out_of_location;
+        $wasBatteryEmpty = $alert->currently_battery_empty;
+        $wasPulseless = $alert->currently_pulseless;
 
-    $currentDateTime = Carbon::now()->toDateTimeString();
+        $admin = User::find($suspect->user_id);
+        $message = '';
 
-    // Verificar si el dispositivo está fuera del polígono
-    if ($polygon && !$this->isInsidePolygon($device, $polygon)) {
-        if (!$wasOutOfLocation) {
-            $alert->out_of_location_count++;
-            $alert->currently_out_of_location = true;
-            $message = $suspect->name.' '.$suspect->lastname .' \'s outside his permitted location at ' . $currentDateTime;
+        $currentDateTime = Carbon::now()->toDateTimeString();
 
-            // Enviar correo solo si se genera la alerta
+        // Verificar si el dispositivo está fuera del polígono
+        if ($polygon && !$this->isInsidePolygon($device, $polygon)) {
+            if (!$wasOutOfLocation) {
+                $alert->out_of_location_count++;
+                $alert->currently_out_of_location = true;
+                $message = $suspect->name . ' ' . $suspect->lastname . ' \'s outside his permitted location at ' . $currentDateTime;
+
+                // Enviar correo solo si se genera la alerta
+                Mail::to($suspect->email)->send(new AlertNotification($message));
+                Mail::to($admin->email)->send(new AlertNotification($message));
+            }
+        } else {
+            if ($wasOutOfLocation) {
+                $alert->currently_out_of_location = false;
+                $alert->out_of_location_count--;
+                $message = $suspect->name . ' ' . $suspect->lastname . ' has returned to his permitted location at ' . $currentDateTime;
+                Mail::to($suspect->email)->send(new AlertNotification($message));
+                Mail::to($admin->email)->send(new AlertNotification($message));
+            }
+        }
+
+        // Verificar el nivel de batería
+        if ($device->battery_level < 20) {
+            if (!$wasBatteryEmpty) {
+                $alert->battery_empty_count++;
+                $alert->currently_battery_empty = true;
+
+                $message = 'Suspect ' . $suspect->name . ' ' . $suspect->lastname . ' \'s battery level is low';
+                Mail::to($suspect->email)->send(new AlertNotification($message));
+                Mail::to($admin->email)->send(new AlertNotification($message));
+            }
+        } else {
+            if ($wasBatteryEmpty) {
+                $alert->currently_battery_empty = false;
+                $alert->battery_empty_count--;
+                $message = 'The battery level has been recovered from suspect ' . $suspect->name . ' ' . $suspect->lastname;
+                Mail::to($suspect->email)->send(new AlertNotification($message));
+                Mail::to($admin->email)->send(new AlertNotification($message));
+            }
+        }
+
+        // Si el dispositivo envía ubicación, quitar la alerta de conexión perdida
+        if ($wasPulseless) {
+            $alert->currently_pulseless = false;
+            $alert->pulseless_count--;
+            $message = $suspect->name . ' ' . $suspect->lastname . '\'s device has reestablished connection at ' . $currentDateTime;
             Mail::to($suspect->email)->send(new AlertNotification($message));
             Mail::to($admin->email)->send(new AlertNotification($message));
         }
-    } else {
-        if ($wasOutOfLocation) {
-            $alert->currently_out_of_location = false;
-            $alert->out_of_location_count--;
-            $message = $suspect->name.' '.$suspect->lastname .' has returned to his permitted location at ' . $currentDateTime;
-            Mail::to($suspect->email)->send(new AlertNotification($message));
-            Mail::to($admin->email)->send(new AlertNotification($message));
-        }
+
+        $alert->save();
+
+        return response()->json(['message' => 'Location updated successfully'], 200);
     }
-
-    // Verificar el nivel de batería
-    if ($device->battery_level < 20) {
-        if (!$wasBatteryEmpty) {
-            $alert->battery_empty_count++;
-            $alert->currently_battery_empty = true;
-
-            $message = 'Suspect '. $suspect->name.' '.$suspect->lastname .' \'s battery level is low';
-            Mail::to($suspect->email)->send(new AlertNotification($message));
-            Mail::to($admin->email)->send(new AlertNotification($message));
-        }
-    } else {
-        if ($wasBatteryEmpty) {
-            $alert->currently_battery_empty = false;
-            $alert->battery_empty_count--;
-            $message = 'The battery level has been recovered from suspect '. $suspect->name.' '.$suspect->lastname;
-            Mail::to($suspect->email)->send(new AlertNotification($message));
-            Mail::to($admin->email)->send(new AlertNotification($message));
-        }
-    }
-
-    // Si el dispositivo envía ubicación, quitar la alerta de conexión perdida
-    if ($wasPulseless) {
-        $alert->currently_pulseless = false;
-        $alert->pulseless_count--;
-        $message = $suspect->name . ' ' . $suspect->lastname . '\'s device has reestablished connection at ' . $currentDateTime;
-        Mail::to($suspect->email)->send(new AlertNotification($message));
-        Mail::to($admin->email)->send(new AlertNotification($message));
-    }
-
-    $alert->save();
-
-    return response()->json(['message' => 'Location updated successfully'], 200);
-}
 
     private function isInsidePolygon($device, $polygon)
     {
-        $point = [$device->latitude, $device->longitude];
+       /*  $point = [$device->latitude, $device->longitude];
         $vertices = array_map(function ($coordinate) {
             return [$coordinate['lat'], $coordinate['lng']];
         }, json_decode($polygon->coordinates, true));
 
+        return $this->pointInPolygon($point, $vertices); */
+        $point = [$device->latitude, $device->longitude];
+        $vertices = array_map(function ($coordinate) {
+            return [$coordinate['lat'], $coordinate['lng']];
+        }, json_decode($polygon->coordinates, true));
+    
+        if (count($vertices) === 1) {
+            // Si el polígono tiene solo un punto, comprobar la distancia al dispositivo
+            $center = $vertices[0];
+            $distance = $this->haversineDistance($point, $center);
+            return $distance <= 30; // Distancia máxima de 30 metros
+        }
+    
         return $this->pointInPolygon($point, $vertices);
     }
+
+    private function haversineDistance($point1, $point2)
+{
+    $earthRadius = 6371000; // Radio de la Tierra en metros
+
+    $latFrom = deg2rad($point1[0]);
+    $lonFrom = deg2rad($point1[1]);
+    $latTo = deg2rad($point2[0]);
+    $lonTo = deg2rad($point2[1]);
+
+    $latDelta = $latTo - $latFrom;
+    $lonDelta = $lonTo - $lonFrom;
+
+    $a = sin($latDelta / 2) * sin($latDelta / 2) +
+         cos($latFrom) * cos($latTo) *
+         sin($lonDelta / 2) * sin($lonDelta / 2);
+    $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+    return $earthRadius * $c;
+}
 
     private function pointInPolygon($point, $vertices)
     {
@@ -206,22 +239,22 @@ class DeviceController extends Controller
 
     public function getLocations()
     {
-        
+
         $devices = Device::with('suspect:id,device_id,name,lastname,identification,date_dirth,address,photo')
-        ->get(['id', 'name', 'latitude', 'longitude']);
+            ->get(['id', 'name', 'latitude', 'longitude']);
 
-// Preparar la respuesta incluyendo la URL de la foto
-$devices = $devices->map(function($device) {
-if ($device->suspect && $device->suspect->photo) {
-$device->photo_url = asset('storage/' . $device->suspect->photo);
-} else {
-$device->photo_url = asset('assets/dist/img/upload.svg');
-}
-return $device;
-});
+        // Preparar la respuesta incluyendo la URL de la foto
+        $devices = $devices->map(function ($device) {
+            if ($device->suspect && $device->suspect->photo) {
+                $device->photo_url = asset('storage/' . $device->suspect->photo);
+            } else {
+                $device->photo_url = asset('assets/dist/img/upload.svg');
+            }
+            return $device;
+        });
 
-// Devolver la respuesta como JSON
-return response()->json($devices);
+        // Devolver la respuesta como JSON
+        return response()->json($devices);
     }
 
 
@@ -257,7 +290,5 @@ return response()->json($devices);
         $device->save();
 
         return response()->json(['message' => 'Device registered successfully']);
-
     }
-
 }

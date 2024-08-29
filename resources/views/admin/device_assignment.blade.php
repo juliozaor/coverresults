@@ -471,7 +471,7 @@ aria-hidden="true">
 
     // Mostrar la imagen actual
     if (suspectData.photo) {
-        $('#uploadImageEdit').attr('src', '{{ asset('storage') }}/' + suspectData.photo);
+        $('#uploadImageEdit').attr('src', '{{ asset('public') }}/' + suspectData.photo);
     } else {
         $('#uploadImageEdit').attr('src', '{{ asset('assets/dist/img/upload.svg') }}');
     }

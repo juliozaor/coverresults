@@ -21,6 +21,8 @@
                 <div class="mb-3">
                     <div class="container text-center">
                         <div class="row">
+                            <div class="col-md-8">
+                                <div class="row">
                             <div class="col-md-4 ps-3 mb-3">
                                 <div class="input-group mb-3">
                                     <form action="{{ route('location-logs.index') }}" method="GET" class="w-100">
@@ -33,6 +35,12 @@
                             </div>
                             <div class="col-md-1 ps-3 my-1">
                                 <h5><span class="badge text-bg-secondary rounded-pill">Total: {{ $logs->total() }}</span></h5>
+                            </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="{{ route('location-logs.export', ['search' => request('search')]) }}" class="btn btn-success">Export to Excel</a>
+
                             </div>
                         </div>
                     </div>
