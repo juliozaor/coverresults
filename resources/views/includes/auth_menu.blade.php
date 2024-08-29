@@ -76,7 +76,7 @@
                 <a class="nav-link{{ $currentRoute == 'devices.index' ? ' active' : '' }}" href="{{ route('devices.index') }}">Devices</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link{{ $currentRoute == 'suspects.index' ? ' active' : '' }}" href="{{ route('suspects.index') }}">Suspect</a>
+                <a class="nav-link{{ $currentRoute == 'suspects.index' ? ' active' : '' }}" href="{{ route('suspects.index') }}">Person</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link{{ $currentRoute == 'polygons.index' ? ' active' : '' }}" href="{{ route('polygons.index') }}">Polygons</a>

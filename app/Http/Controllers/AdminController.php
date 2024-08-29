@@ -49,29 +49,6 @@ class AdminController extends Controller
         return view('admin.device_assignment');
     }
 
-/*     public function searchSuspects(Request $request)
-{
-    $query = $request->input('query');
-
-    $suspects = Device::with('suspect')
-        ->whereHas('suspect', function($q) use ($query) {
-            $q->where('name', 'LIKE', "%$query%")
-              ->orWhere('lastname', 'LIKE', "%$query%")
-              ->orWhere('identification', 'LIKE', "%$query%");
-        })
-        ->get()
-        ->map(function ($device) {
-            if ($device->suspect && $device->suspect->photo) {
-                $device->photo_url = asset('storage/' . $device->suspect->photo);
-            } else {
-                $device->photo_url = asset('assets/dist/img/upload.svg');
-            }
-            return $device;
-        });
-
-    return response()->json($suspects);
-} */
-
 
 public function searchSuspects(Request $request)
 {

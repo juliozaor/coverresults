@@ -183,7 +183,7 @@
                                             <li class="list-group-item d-flex justify-content-between align-items-start">
                                                 <div class="ms-2 me-auto">
                                                     <div class="fw-bold">Name</div>
-                                                    ${suspect.name ? suspect.name + ' ' + suspect.lastname : 'No suspect'}
+                                                    ${suspect.name ? suspect.name + ' ' + suspect.lastname : 'No Person'}
                                                 </div>
                                             </li>
                                             <li class="list-group-item d-flex justify-content-between align-items-start">

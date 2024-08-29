@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="container">
-    <h1>Suspects</h1>
-    <a href="{{ route('suspects.create') }}" class="btn btn-primary">Add Suspect</a>
+    <h1>Persons</h1>
+    <a href="{{ route('suspects.create') }}" class="btn btn-primary">Add Person</a>
     <table class="table table-striped">
         <thead>
             <tr>

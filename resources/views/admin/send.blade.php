@@ -18,9 +18,9 @@
                 <form action="{{ route('send.notification') }}" method="POST">
                     @csrf
                     <div class="mb-3">
-                        <label for="suspect_id" class="form-label">Suspect</label>
+                        <label for="suspect_id" class="form-label">Person</label>
                         <select class="form-select" id="suspect_id" name="suspect_id" required>
-                            <option value="" selected disabled>Select a suspect</option>
+                            <option value="" selected disabled>Select a person</option>
                             @foreach($suspects as $suspect)
                                 <option value="{{ $suspect->id }}">
                                     {{ $suspect->name }} - {{ $suspect->lastname }} - {{ $suspect->device ? $suspect->device->serial : 'No Device' }}
@@ -48,7 +48,7 @@
             <script>
                 $(document).ready(function() {
                     $('#suspect_id').select2({
-                        placeholder: "Select a suspect",
+                        placeholder: "Select a person",
                         allowClear: true
                     });
                 });
