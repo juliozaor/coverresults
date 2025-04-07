@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alert;
+use App\Models\AlertLog;
 use Illuminate\Http\Request;
 use App\Models\Device;
+use App\Models\LocationLog;
 use App\Models\Polygon;
 
 class AdminController extends Controller
@@ -72,6 +74,71 @@ public function searchSuspects(Request $request)
 
     return response()->json($suspects);
 }
+
+public function deviceDetails($id)
+{
+
+    $device = Device::with('suspect')->findOrFail($id);
+
+    // Obtener las ubicaciones de los últimos 7 días
+    $locationLogs = LocationLog::where('device_id', $id)
+        ->where('date', '>=', now()->subDays(7))
+        ->get();
+
+    // Consolidar las coordenadas
+    $consolidatedLocations = [];
+    foreach ($locationLogs as $log) {
+        $consolidatedLocations = array_merge(
+            $consolidatedLocations,
+            $this->consolidateCoordinates($log->locations)
+        );
+    }
+
+    // Ordenar los lugares consolidados por tiempo
+    usort($consolidatedLocations, function($a, $b) {
+        return strtotime($a['time']) - strtotime($b['time']);
+    });
+
+    // Obtener las alertas de los últimos 7 días
+    $alerts = AlertLog::where('device_id', $id)
+        ->where('created_at', '>=', now()->subDays(7))
+        ->get();
+
+    // Pasar los datos a la vista
+    return view('admin.device_details', compact('device', 'consolidatedLocations', 'alerts'));
+
+
+}
+
+private function consolidateCoordinates($locations, $tolerance = 0.0001)
+{
+    $consolidated = [];
+
+    foreach ($locations as $location) {
+        $found = false;
+        foreach ($consolidated as &$consolidatedLocation) {
+            if (abs($consolidatedLocation['latitude'] - $location['latitude']) < $tolerance &&
+                abs($consolidatedLocation['longitude'] - $location['longitude']) < $tolerance) {
+                
+                // Si la ubicación es similar, actualiza el tiempo si es posterior
+                if (strtotime($location['time']) > strtotime($consolidatedLocation['time'])) {
+                    $consolidatedLocation['time'] = $location['time'];
+                }
+
+                $found = true;
+                break;
+            }
+        }
+
+        if (!$found) {
+            // Si no se encontró un punto similar, añade uno nuevo
+            $consolidated[] = $location;
+        }
+    }
+
+    return $consolidated;
+}
+
 
 
 }

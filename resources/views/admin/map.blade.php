@@ -95,8 +95,8 @@
             document.addEventListener('DOMContentLoaded', function() {
                 const mapOptions = {
                     center: {
-                        lat: 40.563043,
-                        lng: -100.927030
+                        lat: 41.8781,
+                        lng: -87.6298
                     },
                     zoom: 10
                 };
@@ -160,15 +160,11 @@
                     devices.forEach(device => {
                         if (markers[device.id]) {
                             // Actualizar la posición del marcador existente
-                            markers[device.id].setPosition(new google.maps.LatLng(parseFloat(device.latitude),
-                                parseFloat(device.longitude)));
+                            markers[device.id].setPosition(new google.maps.LatLng(parseFloat(device.latitude), parseFloat(device.longitude)));
                         } else {
                             // Crear un nuevo marcador
                             let marker = new google.maps.Marker({
-                                position: {
-                                    lat: parseFloat(device.latitude),
-                                    lng: parseFloat(device.longitude)
-                                },
+                                position: {lat: parseFloat(device.latitude), lng: parseFloat(device.longitude)},
                                 map: map,
                                 title: device.name
                             });
@@ -213,6 +209,11 @@
 
                             google.maps.event.addListener(marker, 'mouseout', function() {
                                 infowindow.close();
+                            });
+
+                            // Evento click para redirigir a la página de detalles del dispositivo
+                            google.maps.event.addListener(marker, 'click', function() {
+                                window.location.href = `/device/${device.id}/details`;
                             });
                         }
                     });

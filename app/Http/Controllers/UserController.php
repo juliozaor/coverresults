@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TemporaryPasswordMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
 
@@ -36,6 +38,8 @@ class UserController extends Controller
         ]);
 
         $user->assignRole($data['role']);
+         // Envía la contraseña temporal por correo electrónico
+        Mail::to($data['email'])->send(new TemporaryPasswordMail($temporaryPassword));
 
         return redirect()->route('users.index')->with('success', 'User created successfully');
     }

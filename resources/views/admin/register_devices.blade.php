@@ -77,8 +77,8 @@
                             <td class="table-border-right" align="center">{{ $device->id }}</td>
                             <td align="center">{{ $device->name }}</td>
                             <td align="center">{{ $device->serial }}</td>
-                            <td align="center">{{ $device->polygon->name }}</td>
-                            <td align="center">{{ $device->suspect->name }} {{ $device->suspect->lastname }}</td>
+                            <td align="center">{{ optional($device->polygon)->name ?? '' }}</td>
+                            <td align="center">{{ optional($device->suspect)->name ?? '' }} {{ optional($device->suspect)->lastname ?? '' }}</td>                            
                             <td align="center">{{ $device->created_at->format('d / m / Y') }}</td>
                             <td class="table-border-left" align="center" width="100px">
                                 <div class="d-flex justify-content-center actions">

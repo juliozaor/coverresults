@@ -135,14 +135,27 @@ class SuspectAuthController extends Controller
 
     protected function respondWithToken($token)
 {
-     $expiresInMinutes = auth('suspect')->factory()->getTTL();
+    $expiresInMinutes = auth('suspect')->factory()->getTTL();
      $expirationDate = Carbon::now()->addMinutes($expiresInMinutes)->toDateString();
+
+     $suspect = auth('suspect')->user();
+     $suspectArray = $suspect->toArray();
+     $mappedSuspect = [];
+    
+     foreach ($suspectArray as $key => $value) {
+         if ($key === 'id') {
+             $mappedSuspect[$key] = $value;
+         } else {
+             $mappedSuspect[$key] = (string) $value;
+         }
+     }
+
  
      return response()->json([
          'access_token' => $token,
          'token_type' => 'bearer',
-         'expires_in' => $expirationDate, // Formato de solo fecha
-         'suspect' => auth('suspect')->user()
+         'expires_in' => $expirationDate,
+         'suspect' => $mappedSuspect
      ]);
 }
 

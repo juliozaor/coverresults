@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AlertNotification;
 use App\Models\Alert;
+use App\Models\AlertLog;
 use App\Models\Device;
 use App\Models\User;
 use Carbon\Carbon;
@@ -38,8 +39,14 @@ class CheckDeviceConnections extends Command
                     if (!$wasDisconnected) {
                         $alert->pulseless_count++;
                         $alert->currently_pulseless = true;
-
                         $message = $suspect->name . ' ' . $suspect->lastname . '\'s device has lost connection at ' . $currentDateTime;
+
+                        AlertLog::create([
+                            'device_id' => $device->id,
+                            'type' => 'pulseless',
+                            'message' => $message
+                        ]);
+
                         Mail::to($suspect->email)->send(new AlertNotification($message));
                         Mail::to($admin->email)->send(new AlertNotification($message));
                     }

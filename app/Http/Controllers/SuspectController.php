@@ -30,7 +30,9 @@ class SuspectController extends Controller
         if ($request->has('query') && $request->input('query') != '') {
             $query->where(function($q) use ($request) {
                 $q->where('name', 'like', '%' . $request->input('query') . '%')
-                  ->orWhere('identification', 'like', '%' . $request->input('query') . '%');
+                  ->orWhere('identification', 'like', '%' . $request->input('query') . '%')
+                  ->orWhere('address', 'like', '%' . $request->input('query') . '%')
+                  ->orWhere('lastname', 'like', '%' . $request->input('query') . '%');
             });
         }
     

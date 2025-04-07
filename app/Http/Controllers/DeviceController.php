@@ -15,6 +15,8 @@ use App\Notifications\DeviceAlertNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use App\Models\AlertLog;
+
 
 class DeviceController extends Controller
 {
@@ -54,7 +56,7 @@ class DeviceController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'serial' => 'required|string|max:255|unique:devices,serial,' . $device->id,
+            //'serial' => 'required|string|max:255|unique:devices,serial,' . $device->id,
             'polygon_id' => 'nullable|exists:polygons,id',
             // Otros campos de validación si es necesario
         ]);
@@ -100,7 +102,6 @@ class DeviceController extends Controller
             );
 
             $locations = $locationLog->locations;
-            //$locations[] = ['latitude' => $latitude, 'longitude' => $longitude];
             $locations[] = ['latitude' => $latitude, 'longitude' => $longitude, 'time' => $currentTime];
             $locationLog->locations = $locations;
             $locationLog->save();
@@ -124,17 +125,20 @@ class DeviceController extends Controller
             if (!$wasOutOfLocation) {
                 $alert->out_of_location_count++;
                 $alert->currently_out_of_location = true;
-                $message = $suspect->name . ' ' . $suspect->lastname . ' \'s outside his permitted location at ' . $currentDateTime;
-
-                // Enviar correo solo si se genera la alerta
+                $message = $suspect->name . ' ' . $suspect->lastname . ' is outside his permitted location at ' . $currentDateTime;                
+                $type = 'out_of_location';
+                      
                 Mail::to($suspect->email)->send(new AlertNotification($message));
                 Mail::to($admin->email)->send(new AlertNotification($message));
             }
         } else {
             if ($wasOutOfLocation) {
+
                 $alert->currently_out_of_location = false;
                 $alert->out_of_location_count--;
                 $message = $suspect->name . ' ' . $suspect->lastname . ' has returned to his permitted location at ' . $currentDateTime;
+                $type = 'out_of_location';
+               
                 Mail::to($suspect->email)->send(new AlertNotification($message));
                 Mail::to($admin->email)->send(new AlertNotification($message));
             }
@@ -146,7 +150,9 @@ class DeviceController extends Controller
                 $alert->battery_empty_count++;
                 $alert->currently_battery_empty = true;
 
-                $message = 'Suspect ' . $suspect->name . ' ' . $suspect->lastname . ' \'s battery level is low';
+                $message = 'Suspect ' . $suspect->name . ' ' . $suspect->lastname . ' is battery level is low';
+                $type = 'battery_empty';
+               
                 Mail::to($suspect->email)->send(new AlertNotification($message));
                 Mail::to($admin->email)->send(new AlertNotification($message));
             }
@@ -155,6 +161,8 @@ class DeviceController extends Controller
                 $alert->currently_battery_empty = false;
                 $alert->battery_empty_count--;
                 $message = 'The battery level has been recovered from suspect ' . $suspect->name . ' ' . $suspect->lastname;
+                $type = 'battery_empty';
+                 
                 Mail::to($suspect->email)->send(new AlertNotification($message));
                 Mail::to($admin->email)->send(new AlertNotification($message));
             }
@@ -164,10 +172,30 @@ class DeviceController extends Controller
         if ($wasPulseless) {
             $alert->currently_pulseless = false;
             $alert->pulseless_count--;
-            $message = $suspect->name . ' ' . $suspect->lastname . '\'s device has reestablished connection at ' . $currentDateTime;
+            $message = $suspect->name . ' ' . $suspect->lastname . 'is device has reestablished connection at ' . $currentDateTime;
+            $type = 'pulseless';
+
+            
             Mail::to($suspect->email)->send(new AlertNotification($message));
             Mail::to($admin->email)->send(new AlertNotification($message));
         }
+        
+        if (!empty($message) && !empty($type)) {
+            try {
+                AlertLog::create([
+                    'device_id' => $device->id,
+                    'type' => $type,
+                    'message' => $message
+                ]);
+            } catch (\Exception $e) {
+                \Log::error('Error creating alert log: ' . $e->getMessage());
+                return response()->json(['error' => 'Failed to create alert log.'. $e->getMessage()], 500);
+            }
+        } else {
+            // Registrar un mensaje de error
+            \Log::error("Failed to create AlertLog for device_id: {$device->id} - Type or Message is empty.");
+        }
+        
 
         $alert->save();
 
@@ -176,18 +204,13 @@ class DeviceController extends Controller
 
     private function isInsidePolygon($device, $polygon)
     {
-       /*  $point = [$device->latitude, $device->longitude];
-        $vertices = array_map(function ($coordinate) {
-            return [$coordinate['lat'], $coordinate['lng']];
-        }, json_decode($polygon->coordinates, true));
-
-        return $this->pointInPolygon($point, $vertices); */
         $point = [$device->latitude, $device->longitude];
         $vertices = array_map(function ($coordinate) {
             return [$coordinate['lat'], $coordinate['lng']];
         }, json_decode($polygon->coordinates, true));
     
         if (count($vertices) === 1) {
+            dd("un punto");
             // Si el polígono tiene solo un punto, comprobar la distancia al dispositivo
             $center = $vertices[0];
             $distance = $this->haversineDistance($point, $center);
@@ -198,24 +221,24 @@ class DeviceController extends Controller
     }
 
     private function haversineDistance($point1, $point2)
-{
-    $earthRadius = 6371000; // Radio de la Tierra en metros
+    {
+        $earthRadius = 6371000; // Radio de la Tierra en metros
 
-    $latFrom = deg2rad($point1[0]);
-    $lonFrom = deg2rad($point1[1]);
-    $latTo = deg2rad($point2[0]);
-    $lonTo = deg2rad($point2[1]);
+        $latFrom = deg2rad($point1[0]);
+        $lonFrom = deg2rad($point1[1]);
+        $latTo = deg2rad($point2[0]);
+        $lonTo = deg2rad($point2[1]);
 
-    $latDelta = $latTo - $latFrom;
-    $lonDelta = $lonTo - $lonFrom;
+        $latDelta = $latTo - $latFrom;
+        $lonDelta = $lonTo - $lonFrom;
 
-    $a = sin($latDelta / 2) * sin($latDelta / 2) +
-         cos($latFrom) * cos($latTo) *
-         sin($lonDelta / 2) * sin($lonDelta / 2);
-    $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        $a = sin($latDelta / 2) * sin($latDelta / 2) +
+            cos($latFrom) * cos($latTo) *
+            sin($lonDelta / 2) * sin($lonDelta / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
 
-    return $earthRadius * $c;
-}
+        return $earthRadius * $c;
+    }
 
     private function pointInPolygon($point, $vertices)
     {
@@ -260,8 +283,6 @@ class DeviceController extends Controller
 
     public function registerDevice(Request $request)
     {
-
-
         $validator = Validator::make($request->all(), [
             'token' => 'required|string',
             'device_serial' => 'required|string',
@@ -291,4 +312,6 @@ class DeviceController extends Controller
 
         return response()->json(['message' => 'Device registered successfully']);
     }
+
+    
 }

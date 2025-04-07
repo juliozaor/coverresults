@@ -396,6 +396,29 @@ aria-hidden="true">
 </script>
 <script src="{{ asset('assets/dist/js/bootstrap.bundle.min.js') }}"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cuando el modal se abre
+        $('#newSuspectModal').on('shown.bs.modal', function() {
+            // Restablece la imagen a la predeterminada (si la hay)
+            $('#uploadImage').attr('src', '{{ asset('assets/dist/img/upload.svg') }}');
+            
+            // Limpiar el valor del input de archivo
+            $('#photo').val('');
+            
+            // Restablece el label del input de archivo
+            $('.custom-file-label').html('Choose a photo...');
+            
+            // Restablecer el formulario completo
+            $(this).find('form')[0].reset(); // Reinicia todos los campos del formulario
+
+            // Si tienes alguna validación adicional para limpiar errores o mensajes
+            $('#dateError').hide();
+            $('#phoneError').hide();
+            $('#mobileError').hide();
+        });
+    });
+</script>
+<script>
     $(document).ready(function() {
         $('#photo').on('change', function() {
             // Obtener el nombre del archivo
@@ -420,7 +443,7 @@ aria-hidden="true">
             // Resetear la imagen a la imagen de subida original
             $('#uploadImage').attr('src', '../assets/dist/img/upload.svg');
             // Resetear el label
-            $('.custom-file-label').html('Elija un archivo...');
+            $('.custom-file-label').html('Choose a photo...');
             // Ocultar el botón de limpiar
             $(this).hide();
         });

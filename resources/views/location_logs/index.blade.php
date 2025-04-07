@@ -23,23 +23,37 @@
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="row">
-                            <div class="col-md-4 ps-3 mb-3">
-                                <div class="input-group mb-3">
-                                    <form action="{{ route('location-logs.index') }}" method="GET" class="w-100">
-                                        <div class="input-group">
-                                            <input type="text" name="search" class="form-control" placeholder="Search by suspect or device..." aria-label="search" aria-describedby="button-addon2" value="{{ request('search') }}" />
+                            <div class="col-md-8 ps-3 mb-3">
+                                    <form action="{{ route('location-logs.index') }}" method="GET" class="row">
+                                        <div class="col-4">
+                                            <label for="start_date" class="form-label mr-2">Suspect or device</label>
+                                            <input type="text" name="search" class="form-control" placeholder="Suspect or device..." aria-label="search" aria-describedby="button-addon2" value="{{ request('search') }}" />
+                                        </div>
+                                        <div class="col-3">
+                                            <label for="start_date" class="form-label mr-2">Start Date</label>
+                                            <input type="date" name="start_date" class="form-control" value="{{ request('start_date') }}" />
+                                        </div>
+                                        <div class="col-3">
+                                            <label for="end_date" class="form-label mr-2">End Date</label>
+                                            <input type="date" name="end_date" class="form-control" value="{{ request('end_date') }}" />
+                                        </div>
+                                        <div class="col-2 mt-4">
                                             <button class="btn btn-primary" type="submit" id="button-addon2"><img class="img-fluid" width="20" src="{{ asset('assets/dist/img/search.svg') }}" /></button>
                                         </div>
                                     </form>
                                 </div>
-                            </div>
-                            <div class="col-md-1 ps-3 my-1">
+                            <div class="col-md-1 ps-3 my-1 mt-4">
                                 <h5><span class="badge text-bg-secondary rounded-pill">Total: {{ $logs->total() }}</span></h5>
                             </div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <a href="{{ route('location-logs.export', ['search' => request('search')]) }}" class="btn btn-success">Export to Excel</a>
+                            <div class="col-md-4 mt-4">
+                                <a href="{{ route('location-logs.export', [
+                                    'search' => request('search'),
+                                    'start_date' => request('start_date'),
+                                    'end_date' => request('end_date')
+                                ]) }}" class="btn btn-success">Export to Excel</a>
+                                
 
                             </div>
                         </div>
@@ -62,7 +76,7 @@
                                 <td align="center">{{ $logs->firstItem() + $index }}</td>
                                 <td align="center">{{ $log->suspect->name }} {{ $log->suspect->lastname }}</td>
                                 <td align="center">{{ $log->device->serial }}</td>
-                                <td align="center">{{ $log->date }}</td>
+                                <td align="center">{{ \Carbon\Carbon::parse($log->date)->format('Y-m-d') }}</td>
                                 <td align="center">{{ json_encode($log->locations) }}</td>
                                 <td align="center">
                                     <div class="d-flex justify-content-center actions">
